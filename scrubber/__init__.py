@@ -10,14 +10,18 @@ Whitelisting HTML scrubber.
 import re
 from urlparse import urljoin
 from itertools import chain
-from django.utils.html import urlize
 from BeautifulSoup import BeautifulSoup
+try:
+    from django.utils.html import urlize
+except ImportError:
+    urlize = None
 
 class ScrubberWarning(object):
     pass
 
 class Scrubber(object):
     def __init__(self, base_url=None):
+        self.autolink = bool(urlize)
         self.nofollow = True
         self.base_url = base_url
         self.allowed_tags = set((
@@ -36,7 +40,7 @@ class Scrubber(object):
             'align', 'alt', 'border', 'cite', 'class', 'dir',
             'height', 'href', 'src', 'style', 'title', 'type', 'width',
             'flashvars', # Not sure about flashvars - if any harm can come from it
-            'name', 'value', 'quality', 'data', #for flash embed param tags, could limit to just param if this is harmful
+            'name', 'value', 'quality', 'data', # for flash embed param tags, could limit to just param if this is harmful
         )) # Bad attributes: 'allowscriptaccess', 'xmlns', 'target'
         self.normalized_tag_replacements = {'b': 'strong', 'i': 'em'}
         self.warnings = []
@@ -47,11 +51,11 @@ class Scrubber(object):
             if k.startswith('_scrub_tag_'):
                 self.tag_scrubbers[k[11:]] = [getattr(self, k)]
 
-    def autolink(self, soup):
+    def autolink_soup(self, soup):
         def _autolink(node):
             if isinstance(node, basestring):
                 text = node
-                text2 = urlize(text, nofollow=True)
+                text2 = urlize(text, nofollow=self.nofollow)
                 if text != text2:
                     node.replaceWith(text2)
             else:
@@ -129,7 +133,8 @@ class Scrubber(object):
     def _scrub_soup(self, soup):
         self.strip_disallowed(soup)
 
-        self.autolink(soup)
+        if self.autolink:
+            self.autolink_soup(soup)
 
         for tag_name, scrubbers in self.tag_scrubbers.items():
             for node in soup(tag_name):
