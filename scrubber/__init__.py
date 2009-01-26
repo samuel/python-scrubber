@@ -11,11 +11,73 @@ import re
 from urlparse import urljoin
 from itertools import chain
 from BeautifulSoup import BeautifulSoup
-try:
-    from django.utils.html import urlize
-except ImportError:
-    urlize = None
 
+def urlize(text, trim_url_limit=None, nofollow=False, autoescape=False):
+    """
+    MODIFIED : Originaly from django.utils.html, changed to behave better with pre-encoded urls.
+               Though nothing actually changed other than removing some django utils, and it passes
+               the test case now.
+    
+    Converts any URLs in text into clickable links.
+
+    If trim_url_limit is not None, the URLs in link text longer than this limit
+    will truncated to trim_url_limit-3 characters and appended with an elipsis.
+
+    If nofollow is True, the URLs in link text will get a rel="nofollow"
+    attribute.
+
+    If autoescape is True, the link text and URLs will get autoescaped.
+    """
+    from urllib import quote as urlquote
+    
+    LEADING_PUNCTUATION  = ['(', '<', '&lt;']
+    TRAILING_PUNCTUATION = ['.', ',', ')', '>', '\n', '&gt;']
+    
+    word_split_re = re.compile(r'(\s+)')
+    punctuation_re = re.compile('^(?P<lead>(?:%s)*)(?P<middle>.*?)(?P<trail>(?:%s)*)$' % \
+        ('|'.join([re.escape(x) for x in LEADING_PUNCTUATION]),
+        '|'.join([re.escape(x) for x in TRAILING_PUNCTUATION])))
+    simple_email_re = re.compile(r'^\S+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+$')
+    del x # Temporary variable
+
+    def escape(html):
+        return html.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;').replace("'", '&#39;')
+    
+    trim_url = lambda x, limit=trim_url_limit: limit is not None and (len(x) > limit and ('%s...' % x[:max(0, limit - 3)])) or x
+    safe_input = False#Todo, Strip this out
+    words = word_split_re.split(text)
+    nofollow_attr = nofollow and ' rel="nofollow"' or ''
+    for i, word in enumerate(words):
+        match = None
+        if '.' in word or '@' in word or ':' in word:
+            match = punctuation_re.match(word)
+        if match:
+            lead, middle, trail = match.groups()
+            # Make URL we want to point to.
+            url = None
+            if middle.startswith('http://') or middle.startswith('https://'):
+                url = urlquote(middle, safe='/&=:;#?+*')
+            elif middle.startswith('www.') or ('@' not in middle and \
+                    middle and middle[0] in string.ascii_letters + string.digits and \
+                    (middle.endswith('.org') or middle.endswith('.net') or middle.endswith('.com'))):
+                url = urlquote('http://%s' % middle, safe='/&=:;#?+*')
+            elif '@' in middle and not ':' in middle and simple_email_re.match(middle):
+                url = 'mailto:%s' % middle
+                nofollow_attr = ''
+            # Make link.
+            if url:
+                trimmed = trim_url(middle)
+                if autoescape:
+                    lead, trail = escape(lead), escape(trail)
+                    url, trimmed = escape(url), escape(trimmed)
+                middle = '<a href="%s"%s>%s</a>' % (url, nofollow_attr, trimmed)
+                words[i] = '%s%s%s' % (lead, middle, trail)
+            elif autoescape:
+                words[i] = escape(word)
+        elif autoescape:
+            words[i] = escape(word)
+    return u''.join(words)
+    
 class ScrubberWarning(object):
     pass
 

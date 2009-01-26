@@ -18,6 +18,10 @@ class ScrubberTestCase(unittest.TestCase):
         ( # No autolinking of existing links
             """<a href="http://www.example.com">Example</a>""",
             """<a href="http://www.example.com" rel="nofollow" class="external">Example</a>"""
+        ),        
+        ( # No enocoding of pre-encoded urls during autolink:
+            """<a href="http://www.example.com/aaa%20bbb/test%20test.jpg">Example</a>""",
+            """<a href="http://www.example.com/aaa%20bbb/test%20test.jpg" rel="nofollow" class="external">Example</a>"""
         ),
         ( # Strip scripts
             """<div xmlns="http://www.w3.org/1999/xhtml">safe<script type="text/javascript">location.href='http:/'+'/example.com/';</script> description</div>""",
