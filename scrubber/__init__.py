@@ -102,6 +102,7 @@ class Scrubber(object):
             'align', 'alt', 'border', 'cite', 'class', 'dir',
             'height', 'href', 'src', 'style', 'title', 'type', 'width',
             'flashvars', # Not sure about flashvars - if any harm can come from it
+            'classid', #ff needs the classid on object tags for flash
             'name', 'value', 'quality', 'data', # for flash embed param tags, could limit to just param if this is harmful
         )) # Bad attributes: 'allowscriptaccess', 'xmlns', 'target'
         self.normalized_tag_replacements = {'b': 'strong', 'i': 'em'}
