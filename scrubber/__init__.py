@@ -2,6 +2,10 @@
 Whitelisting HTML scrubber.
 """
 
+__author__ = "Samuel Stauffer <samuel@descolada.com>"
+__version__ = "1.0"
+__license__ = "Python"
+
 # 
 # Useful links:
 #   http://www.feedparser.org/docs/html-sanitization.html
@@ -14,10 +18,8 @@ from BeautifulSoup import BeautifulSoup
 
 def urlize(text, trim_url_limit=None, nofollow=False, autoescape=False):
     """
-    MODIFIED : Originaly from django.utils.html, changed to behave better with pre-encoded urls.
-               Though nothing actually changed other than removing some django utils, and it passes
-               the test case now.
-    
+    Borrowed from Django
+
     Converts any URLs in text into clickable links.
 
     If trim_url_limit is not None, the URLs in link text longer than this limit
