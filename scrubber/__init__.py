@@ -3,7 +3,7 @@ Whitelisting HTML scrubber.
 """
 
 __author__ = "Samuel Stauffer <samuel@descolada.com>"
-__version__ = "1.0"
+__version__ = "1.1"
 __license__ = "Python"
 
 # 
@@ -144,6 +144,9 @@ class Scrubber(object):
             # Remove disallowed attributes
             attrs = []
             for k, v in node.attrs:
+                if not v:
+                    continue
+
                 if k.lower() not in self.allowed_attributes:
                     continue
 

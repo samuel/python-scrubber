@@ -64,6 +64,10 @@ class ScrubberTestCase(unittest.TestCase):
             """<font size=+0>test</font> <font>wowzers</font> <font></font> <font><p>foo</p><i>bar</i></font>""",
             """test wowzers  <p>foo</p><em>bar</em>"""
         ),
+        ( # Stripping empty attributed
+            """<font style="">Foo</font> <span id="">Bar</span>""",
+            """Foo <span>Bar</span>"""
+        ),
     )
 
     def setUp(self):
