@@ -11,7 +11,7 @@ __license__ = "Python"
 #   http://www.feedparser.org/docs/html-sanitization.html
 #
 
-import re
+import re, string
 from urlparse import urljoin
 from itertools import chain
 from BeautifulSoup import BeautifulSoup
