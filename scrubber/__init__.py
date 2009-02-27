@@ -89,7 +89,7 @@ class Scrubber(object):
         self.allowed_tags = set((
             'a', 'abbr', 'acronym', 'b', 'bdo', 'big', 'blockquote', 'br',
             'center', 'cite', 'code',
-            'dd', 'del', 'dfn', 'div', 'dl', 'dt', 'em', 'embed',
+            'dd', 'del', 'dfn', 'div', 'dl', 'dt', 'em', 'embed', 'font',
             'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hr', 'i', 'img', 'ins',
             'kbd', 'li', 'object', 'ol', 'param', 'pre', 'p', 'q',
             's', 'samp', 'small', 'span', 'strike', 'strong', 'sub', 'sup',
@@ -101,8 +101,9 @@ class Scrubber(object):
         self.allowed_attributes = set((
             'align', 'alt', 'border', 'cite', 'class', 'dir',
             'height', 'href', 'src', 'style', 'title', 'type', 'width',
+            'face', 'size', # font tags
             'flashvars', # Not sure about flashvars - if any harm can come from it
-            'classid', #ff needs the classid on object tags for flash
+            'classid', # FF needs the classid on object tags for flash
             'name', 'value', 'quality', 'data', # for flash embed param tags, could limit to just param if this is harmful
         )) # Bad attributes: 'allowscriptaccess', 'xmlns', 'target'
         self.normalized_tag_replacements = {'b': 'strong', 'i': 'em'}
@@ -140,7 +141,7 @@ class Scrubber(object):
 
             # Remove disallowed attributes
             attrs = []
-            for k,v in node.attrs:
+            for k, v in node.attrs:
                 if k.lower() not in self.allowed_attributes:
                     continue
 
@@ -186,6 +187,23 @@ class Scrubber(object):
         img['alt'] = img.get('alt', '')
 
         self._clean_path(img, 'src')
+
+    def _scrub_tag_font(self, node):
+        attrs = []
+        for k, v in node.attrs:
+            if k.lower() == 'size' and v.startswith('+'):
+                # Remove "size=+0"
+                continue
+            attrs.append((k, v))
+        node.attrs = attrs
+
+        if len(node.attrs) == 0:
+            # IE renders font tags with no attributes differently then other browsers
+            if node.contents:
+                idx = node.parent.contents.index(node)
+                for n in reversed(node.contents):
+                    node.parent.insert(idx, n)
+            node.extract()
 
     def _scrub_html_pre(self, html):
         return html

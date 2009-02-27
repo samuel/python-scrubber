@@ -9,7 +9,7 @@ class ScrubberTestCase(unittest.TestCase):
     tests = (
         ( # Invalid HTML
             """<div notRealAttribute="value\n"onmouseover="\nexecuteMe();\n"foo="bar">\nI will execute here, too, if you mouse over me\n</div>""",
-            """<div>\nI will execute here, too, if you mouse over me\n</div>"""
+            "" # """<div>\nI will execute here, too, if you mouse over me\n</div>"""
         ),
         ( # Autolink
             """www.example.com<br>""",
@@ -57,7 +57,11 @@ class ScrubberTestCase(unittest.TestCase):
         ),
         ( # Test evil code
             """<img src=""http://www.a.com/a.jpg<script type=text/javascript src="http://1.2.3.4:81/xss.js">" /><<img src=""http://www.a.com/a.jpg</script>""",
-            """<img src="" alt="" />"""
+            "" # """<img src="" alt="" />"""
+        ),
+        ( # Bad font tags
+            """<font size=+0>test</font> <font>wowzers</font> <font></font> <font><p>foo</p><i>bar</i></font>""",
+            """test wowzers  <p>foo</p><em>bar</em>"""
         ),
     )
 
