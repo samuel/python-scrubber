@@ -3,7 +3,7 @@ Whitelisting HTML scrubber.
 """
 
 __author__ = "Samuel Stauffer <samuel@descolada.com>"
-__version__ = "1.1.1"
+__version__ = "1.2"
 __license__ = "Python"
 
 # 
