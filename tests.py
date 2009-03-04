@@ -68,6 +68,10 @@ class ScrubberTestCase(unittest.TestCase):
             """<font style="">Foo</font> <span id="">Bar</span>""",
             """Foo <span>Bar</span>"""
         ),
+        ( # a0 == nbsp
+            u"""test\xa0www.this.com""",
+            u"""test <a href="http://www.this.com" rel="nofollow">www.this.com</a>"""
+        ),
     )
 
     def setUp(self):

@@ -212,7 +212,7 @@ class Scrubber(object):
             node.extract()
 
     def _scrub_html_pre(self, html):
-        return html
+        return html.replace(u'\xa0', u' ') # a0 == NBSP
 
     def _scrub_html_post(self, html):
         return html
