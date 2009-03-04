@@ -95,7 +95,8 @@ class Scrubber(object):
             'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hr', 'i', 'img', 'ins',
             'kbd', 'li', 'object', 'ol', 'param', 'pre', 'p', 'q',
             's', 'samp', 'small', 'span', 'strike', 'strong', 'sub', 'sup',
-            'table', 'td', 'th', 'tr', 'tt', 'ul', 'u', 'var', 'wbr',
+            'table', 'tbody', 'td', 'th', 'thead', 'tr', 'tt', 'ul', 'u',
+            'var', 'wbr',
         ))
         self.disallowed_tags_save_content = set((
             'blink',
