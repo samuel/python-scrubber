@@ -44,7 +44,9 @@ def urlize(text, trim_url_limit=None, nofollow=False, autoescape=False):
 
     def escape(html):
         return html.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;').replace("'", '&#39;')
-    
+
+    text = text.replace(u'\u2019', "'").replace(u'\xa0', u' ') # a0 == NBSP
+
     trim_url = lambda x, limit=trim_url_limit: limit is not None and (len(x) > limit and ('%s...' % x[:max(0, limit - 3)])) or x
     safe_input = False#Todo, Strip this out
     words = word_split_re.split(text)
@@ -222,7 +224,7 @@ class Scrubber(object):
             node.extract()
 
     def _scrub_html_pre(self, html):
-        return html.replace(u'\xa0', u' ') # a0 == NBSP
+        return html
 
     def _scrub_html_post(self, html):
         return html
