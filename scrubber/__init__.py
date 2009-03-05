@@ -3,7 +3,7 @@ Whitelisting HTML scrubber.
 """
 
 __author__ = "Samuel Stauffer <samuel@descolada.com>"
-__version__ = "1.3.1"
+__version__ = "1.3.2"
 __license__ = "Python"
 
 # 
@@ -35,7 +35,7 @@ def urlize(text, trim_url_limit=None, nofollow=False, autoescape=False):
     LEADING_PUNCTUATION  = ['(', '<', '&lt;']
     TRAILING_PUNCTUATION = ['.', ',', ')', '>', '\n', '&gt;']
     
-    word_split_re = re.compile(r'(\s+)')
+    word_split_re = re.compile(r'([\s\xa0]+)')
     punctuation_re = re.compile('^(?P<lead>(?:%s)*)(?P<middle>.*?)(?P<trail>(?:%s)*)$' % \
         ('|'.join([re.escape(x) for x in LEADING_PUNCTUATION]),
         '|'.join([re.escape(x) for x in TRAILING_PUNCTUATION])))
@@ -45,8 +45,6 @@ def urlize(text, trim_url_limit=None, nofollow=False, autoescape=False):
     def escape(html):
         return html.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;').replace("'", '&#39;')
 
-    text = text.replace(u'\u2019', "'").replace(u'\xa0', u' ') # a0 == NBSP
-
     trim_url = lambda x, limit=trim_url_limit: limit is not None and (len(x) > limit and ('%s...' % x[:max(0, limit - 3)])) or x
     safe_input = False#Todo, Strip this out
     words = word_split_re.split(text)
@@ -54,7 +52,7 @@ def urlize(text, trim_url_limit=None, nofollow=False, autoescape=False):
     for i, word in enumerate(words):
         match = None
         if '.' in word or '@' in word or ':' in word:
-            match = punctuation_re.match(word)
+            match = punctuation_re.match(word.replace(u'\u2019', "'").replace(u'\xa0', u' ')) # a0 == NBSP
         if match:
             lead, middle, trail = match.groups()
             # Make URL we want to point to.

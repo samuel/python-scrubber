@@ -70,7 +70,7 @@ class ScrubberTestCase(unittest.TestCase):
         ),
         ( # a0 == nbsp
             u"""test\xa0www.this.com""",
-            u"""test <a href="http://www.this.com" rel="nofollow">www.this.com</a>"""
+            u"""test\xa0<a href="http://www.this.com" rel="nofollow">www.this.com</a>"""
         ),
         ( # Remove comments
             "Foo <!-- bar -->",
