@@ -4,7 +4,7 @@ from distutils.core import setup
 
 setup(
     name = 'scrubber',
-    version = '1.3',
+    version = '1.3.1',
     description = 'A whitelisting HTML scrubber',
     author = 'Samuel Stauffer',
     author_email = 'samuel@descolada.com',
