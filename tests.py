@@ -72,6 +72,10 @@ class ScrubberTestCase(unittest.TestCase):
             u"""test\xa0www.this.com""",
             u"""test <a href="http://www.this.com" rel="nofollow">www.this.com</a>"""
         ),
+        ( # Remove comments
+            "Foo <!-- bar -->",
+            "Foo ",
+        ),
     )
 
     def setUp(self):
@@ -101,7 +105,7 @@ class SelectiveScriptScrubberTestCase(unittest.TestCase):
         ),
         ( # Stat counter
             """<!-- Start of StatCounter Code --><script type="text/javascript">\nvar sc_project=1234; \nvar sc_invisible=0; \nvar sc_partition=12; \nvar sc_security="1234a5"; \n</script><script src="http://www.statcounter.com/counter/counter_xhtml.js" type="text/javascript"></script><noscript><div class="statcounter"><a href="http://www.statcounter.com/" class="statcounter" rel="nofollow"><img src="http://c37.statcounter.com/1234/0/020062e8/0/" alt="hit counter" class="statcounter" /></a></div></noscript><!-- End of StatCounter Code -->""",
-            True
+            """<script type="text/javascript">\nvar sc_project=1234; \nvar sc_invisible=0; \nvar sc_partition=12; \nvar sc_security="1234a5"; \n</script><script src="http://www.statcounter.com/counter/counter_xhtml.js" type="text/javascript"></script><noscript><div class="statcounter"><a href="http://www.statcounter.com/" class="statcounter" rel="nofollow"><img src="http://c37.statcounter.com/1234/0/020062e8/0/" alt="hit counter" class="statcounter" /></a></div></noscript>"""
         ),
         ( # Google calendar
             """<iframe src="http://www.google.com/calendar/embed?title=test&amp;height=300&amp;wkst=1&amp;bgcolor=%23FFFFFF&amp;ctz=America%2FLos_Angeles" style=" border-width:0 " width="300" height="300" frameborder="0" scrolling="no"></iframe>""",

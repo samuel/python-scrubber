@@ -3,7 +3,7 @@ Whitelisting HTML scrubber.
 """
 
 __author__ = "Samuel Stauffer <samuel@descolada.com>"
-__version__ = "1.2.1"
+__version__ = "1.3"
 __license__ = "Python"
 
 # 
@@ -14,7 +14,7 @@ __license__ = "Python"
 import re, string
 from urlparse import urljoin
 from itertools import chain
-from BeautifulSoup import BeautifulSoup
+from BeautifulSoup import BeautifulSoup, Comment
 
 def urlize(text, trim_url_limit=None, nofollow=False, autoescape=False):
     """
@@ -87,6 +87,7 @@ class Scrubber(object):
     def __init__(self, base_url=None):
         self.autolink = bool(urlize)
         self.nofollow = True
+        self.remove_comments = True
         self.base_url = base_url
         self.allowed_tags = set((
             'a', 'abbr', 'acronym', 'b', 'bdo', 'big', 'blockquote', 'br',
@@ -134,13 +135,19 @@ class Scrubber(object):
         _autolink(soup)
 
     def strip_disallowed(self, soup):
+        toremove = []
         for node in soup.recursiveChildGenerator():
+            if self.remove_comments and isinstance(node, Comment):
+                toremove.append(node)
+                continue
+
             if isinstance(node, basestring):
                 continue
                 
             # Remove disallowed tags
             if node.name not in self.allowed_tags:
-                node.extract()
+                toremove.append(node)
+                continue
 
             # Remove disallowed attributes
             attrs = []
@@ -158,6 +165,9 @@ class Scrubber(object):
 
                 attrs.append((k,v))
             node.attrs = attrs
+
+        for node in toremove:
+            node.extract()
 
     def normalize_html(self, soup):
         for node in soup.findAll(self.normalized_tag_replacements.keys()):
@@ -223,13 +233,16 @@ class Scrubber(object):
         if self.autolink:
             self.autolink_soup(soup)
 
+        toremove = []
         for tag_name, scrubbers in self.tag_scrubbers.items():
             for node in soup(tag_name):
                 for scrub in scrubbers:
                     if scrub(node):
                         # Remove the node from the tree
-                        node.extract()
+                        toremove.append(node)
                         break
+        for node in toremove:
+            node.extract()
 
         self.normalize_html(soup)
 
