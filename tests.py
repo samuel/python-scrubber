@@ -74,7 +74,15 @@ class ScrubberTestCase(unittest.TestCase):
         ),
         ( # Remove comments
             "Foo <!-- bar -->",
-            "Foo ",
+            "Foo "
+        ),
+        ( # Layered font tags
+            """<div><font size=+0><font size=+0><a href="http://www.google.com">test</a></font><font>ing</font> 123</font> abc</div>""",
+            """<div><a href="http://www.google.com" rel="nofollow" class="external">test</a>ing 123 abc</div>"""
+        ),
+        ( # Save contents of tags specified in 'disallowed_tags_save_content'
+            "<blink>Foo</blink>",
+            "Foo"
         ),
     )
 

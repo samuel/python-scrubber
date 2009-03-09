@@ -3,7 +3,7 @@ Whitelisting HTML scrubber.
 """
 
 __author__ = "Samuel Stauffer <samuel@descolada.com>"
-__version__ = "1.3.2"
+__version__ = "1.3.3"
 __license__ = "Python"
 
 # 
@@ -138,15 +138,15 @@ class Scrubber(object):
         toremove = []
         for node in soup.recursiveChildGenerator():
             if self.remove_comments and isinstance(node, Comment):
-                toremove.append(node)
+                toremove.append((False, node))
                 continue
 
             if isinstance(node, basestring):
                 continue
-                
+
             # Remove disallowed tags
             if node.name not in self.allowed_tags:
-                toremove.append(node)
+                toremove.append((node.name in self.disallowed_tags_save_content, node))
                 continue
 
             # Remove disallowed attributes
@@ -166,14 +166,21 @@ class Scrubber(object):
                 attrs.append((k,v))
             node.attrs = attrs
 
-        for node in toremove:
-            node.extract()
+        self._remove_nodes(toremove)
 
     def normalize_html(self, soup):
         for node in soup.findAll(self.normalized_tag_replacements.keys()):
             node.name = self.normalized_tag_replacements[node.name]
         # for node in soup.findAll('br', clear="all"):
         #     node.extract()
+
+    def _remove_nodes(self, nodes):
+        for keep_contentes, node in nodes:
+            if keep_contentes and node.contents:
+                idx = node.parent.contents.index(node)
+                for n in reversed(node.contents):
+                    node.parent.insert(idx, n)
+            node.extract()
 
     def _clean_path(self, node, attrname):
         url = node.get(attrname)
@@ -214,12 +221,8 @@ class Scrubber(object):
         node.attrs = attrs
 
         if len(node.attrs) == 0:
-            # IE renders font tags with no attributes differently then other browsers
-            if node.contents:
-                idx = node.parent.contents.index(node)
-                for n in reversed(node.contents):
-                    node.parent.insert(idx, n)
-            node.extract()
+            # IE renders font tags with no attributes differently then other browsers so remove them
+            return "keep_contents"
 
     def _scrub_html_pre(self, html):
         return html
@@ -237,12 +240,13 @@ class Scrubber(object):
         for tag_name, scrubbers in self.tag_scrubbers.items():
             for node in soup(tag_name):
                 for scrub in scrubbers:
-                    if scrub(node):
+                    remove = scrub(node)
+                    if remove:
                         # Remove the node from the tree
-                        toremove.append(node)
+                        toremove.append((remove == "keep_contents", node))
                         break
-        for node in toremove:
-            node.extract()
+
+        self._remove_nodes(toremove)
 
         self.normalize_html(soup)
 
