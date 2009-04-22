@@ -84,6 +84,10 @@ class ScrubberTestCase(unittest.TestCase):
             "<blink>Foo</blink>",
             "Foo"
         ),
+        ( # Character entities shouldn't get autolinked
+            """http://www.google.com&nbsp;&nbsp;""",
+            """<a href="http://www.google.com" rel="nofollow">http://www.google.com</a>&nbsp;&nbsp;"""
+        ),
     )
 
     def setUp(self):

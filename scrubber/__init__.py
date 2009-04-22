@@ -35,7 +35,7 @@ def urlize(text, trim_url_limit=None, nofollow=False, autoescape=False):
     LEADING_PUNCTUATION  = ['(', '<', '&lt;']
     TRAILING_PUNCTUATION = ['.', ',', ')', '>', '\n', '&gt;']
     
-    word_split_re = re.compile(r'([\s\xa0]+)')
+    word_split_re = re.compile(r'([\s\xa0]+|&nbsp;)')
     punctuation_re = re.compile('^(?P<lead>(?:%s)*)(?P<middle>.*?)(?P<trail>(?:%s)*)$' % \
         ('|'.join([re.escape(x) for x in LEADING_PUNCTUATION]),
         '|'.join([re.escape(x) for x in TRAILING_PUNCTUATION])))
@@ -52,7 +52,7 @@ def urlize(text, trim_url_limit=None, nofollow=False, autoescape=False):
     for i, word in enumerate(words):
         match = None
         if '.' in word or '@' in word or ':' in word:
-            match = punctuation_re.match(word.replace(u'\u2019', "'").replace(u'\xa0', u' ')) # a0 == NBSP
+            match = punctuation_re.match(word.replace(u'\u2019', "'")) # a0 == NBSP
         if match:
             lead, middle, trail = match.groups()
             # Make URL we want to point to.
