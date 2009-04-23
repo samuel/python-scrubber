@@ -3,7 +3,7 @@ Whitelisting HTML scrubber.
 """
 
 __author__ = "Samuel Stauffer <samuel@descolada.com>"
-__version__ = "1.3.4"
+__version__ = "1.3.5"
 __license__ = "Python"
 
 # 
@@ -35,7 +35,7 @@ def urlize(text, trim_url_limit=None, nofollow=False, autoescape=False):
     LEADING_PUNCTUATION  = ['(', '<', '&lt;']
     TRAILING_PUNCTUATION = ['.', ',', ')', '>', '\n', '&gt;']
     
-    word_split_re = re.compile(r'([\s\xa0]+|&nbsp;)')
+    word_split_re = re.compile(r'([\s\xa0]+|&nbsp;)') # a0 == NBSP
     punctuation_re = re.compile('^(?P<lead>(?:%s)*)(?P<middle>.*?)(?P<trail>(?:%s)*)$' % \
         ('|'.join([re.escape(x) for x in LEADING_PUNCTUATION]),
         '|'.join([re.escape(x) for x in TRAILING_PUNCTUATION])))
@@ -46,15 +46,15 @@ def urlize(text, trim_url_limit=None, nofollow=False, autoescape=False):
         return html.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;').replace("'", '&#39;')
 
     trim_url = lambda x, limit=trim_url_limit: limit is not None and (len(x) > limit and ('%s...' % x[:max(0, limit - 3)])) or x
-    safe_input = False#Todo, Strip this out
     words = word_split_re.split(text)
     nofollow_attr = nofollow and ' rel="nofollow"' or ''
     for i, word in enumerate(words):
         match = None
         if '.' in word or '@' in word or ':' in word:
-            match = punctuation_re.match(word.replace(u'\u2019', "'")) # a0 == NBSP
+            match = punctuation_re.match(word.replace(u'\u2019', "'"))
         if match:
             lead, middle, trail = match.groups()
+            middle = middle.encode('utf-8')
             # Make URL we want to point to.
             url = None
             if middle.startswith('http://') or middle.startswith('https://'):
@@ -73,7 +73,7 @@ def urlize(text, trim_url_limit=None, nofollow=False, autoescape=False):
                     lead, trail = escape(lead), escape(trail)
                     url, trimmed = escape(url), escape(trimmed)
                 middle = '<a href="%s"%s>%s</a>' % (url, nofollow_attr, trimmed)
-                words[i] = '%s%s%s' % (lead, middle, trail)
+                words[i] = '%s%s%s' % (lead, middle.decode('utf-8'), trail)
             elif autoescape:
                 words[i] = escape(word)
         elif autoescape:
