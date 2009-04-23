@@ -89,8 +89,8 @@ class ScrubberTestCase(unittest.TestCase):
             """<a href="http://www.google.com" rel="nofollow">http://www.google.com</a>&nbsp;&nbsp;"""
         ),
         ( # Test unicode with autolinker
-            u"""http://www.google.com/?q=mitä.com""",
-            u"""<a href="http://www.google.com/?q=mit%C3%A4.com" rel="nofollow">http://www.google.com/?q=mit\xe4.com</a>""",
+            u"""http://www.google.com/?q=mitä""",
+            u"""<a href="http://www.google.com/?q=mit%C3%A4" rel="nofollow">http://www.google.com/?q=mit\xe4</a>""",
         ),
     )
 
