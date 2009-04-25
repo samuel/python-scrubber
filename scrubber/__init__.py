@@ -7,13 +7,9 @@ See LICENSE for license details.
 """
 
 __author__ = "Samuel Stauffer <samuel@lefora.com>"
-__version__ = "1.4.0"
+__version__ = "1.4.1"
 __license__ = "Python"
-
-# 
-# Useful links:
-#   http://www.feedparser.org/docs/html-sanitization.html
-#
+__all__ = ['Scrubber', 'SelectiveScriptScrubber', 'ScrubberWarning', 'UnapprovedJavascript', 'urlize']
 
 import re, string
 from urlparse import urljoin
@@ -21,10 +17,7 @@ from itertools import chain
 from BeautifulSoup import BeautifulSoup, Comment
 
 def urlize(text, trim_url_limit=None, nofollow=False, autoescape=False):
-    """
-    Borrowed from Django
-
-    Converts any URLs in text into clickable links.
+    """Converts any URLs in text into clickable links.
 
     If trim_url_limit is not None, the URLs in link text longer than this limit
     will truncated to trim_url_limit-3 characters and appended with an elipsis.
@@ -33,6 +26,8 @@ def urlize(text, trim_url_limit=None, nofollow=False, autoescape=False):
     attribute.
 
     If autoescape is True, the link text and URLs will get autoescaped.
+
+    *Modified from Django*
     """
     from urllib import quote as urlquote
     
@@ -124,6 +119,7 @@ class Scrubber(object):
                 self.tag_scrubbers[k[11:]] = [getattr(self, k)]
 
     def autolink_soup(self, soup):
+        """Autolink urls in text nodes that aren't already linked (inside anchor tags)."""
         def _autolink(node):
             if isinstance(node, basestring):
                 text = node
@@ -139,6 +135,7 @@ class Scrubber(object):
         _autolink(soup)
 
     def strip_disallowed(self, soup):
+        """Remove nodes and attributes from the soup that aren't specifically allowed."""
         toremove = []
         for node in soup.recursiveChildGenerator():
             if self.remove_comments and isinstance(node, Comment):
@@ -173,12 +170,14 @@ class Scrubber(object):
         self._remove_nodes(toremove)
 
     def normalize_html(self, soup):
+        """Convert tags to a standard set. (e.g. convert 'b' tags to 'strong')"""
         for node in soup.findAll(self.normalized_tag_replacements.keys()):
             node.name = self.normalized_tag_replacements[node.name]
         # for node in soup.findAll('br', clear="all"):
         #     node.extract()
 
     def _remove_nodes(self, nodes):
+        """Remove a list of nodes from the soup."""
         for keep_contentes, node in nodes:
             if keep_contentes and node.contents:
                 idx = node.parent.contents.index(node)
@@ -229,9 +228,11 @@ class Scrubber(object):
             return "keep_contents"
 
     def _scrub_html_pre(self, html):
+        """Process the html before sanitization"""
         return html
 
     def _scrub_html_post(self, html):
+        """Process the html after sanitization"""
         return html
 
     def _scrub_soup(self, soup):
@@ -255,6 +256,8 @@ class Scrubber(object):
         self.normalize_html(soup)
 
     def scrub(self, html):
+        """Return a sanitized version of the given html."""
+
         self.warnings = []
 
         html = self._scrub_html_pre(html)
