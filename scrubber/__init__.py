@@ -1,9 +1,13 @@
 """
-Whitelisting HTML scrubber.
+Whitelisting HTML sanitizer.
+
+Copyright (c) 2009 Lefora <samuel@lefora.com>
+
+See LICENSE for license details.
 """
 
-__author__ = "Samuel Stauffer <samuel@descolada.com>"
-__version__ = "1.3.5"
+__author__ = "Samuel Stauffer <samuel@lefora.com>"
+__version__ = "1.4.0"
 __license__ = "Python"
 
 # 
