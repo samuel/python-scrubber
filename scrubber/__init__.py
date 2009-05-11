@@ -7,7 +7,7 @@ See LICENSE for license details.
 """
 
 __author__ = "Samuel Stauffer <samuel@lefora.com>"
-__version__ = "1.4.1"
+__version__ = "1.4.2"
 __license__ = "Python"
 __all__ = ['Scrubber', 'SelectiveScriptScrubber', 'ScrubberWarning', 'UnapprovedJavascript', 'urlize']
 
@@ -187,7 +187,7 @@ class Scrubber(object):
 
     def _clean_path(self, node, attrname):
         url = node.get(attrname)
-        if url and '://' not in url:
+        if url and '://' not in url and not url.startswith('mailto:'):
             if url[0] not in ('/', '.'):
                 node['href'] = "http://" + url
             elif self.base_url:

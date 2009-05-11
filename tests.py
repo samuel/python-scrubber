@@ -92,6 +92,10 @@ class ScrubberTestCase(unittest.TestCase):
             u"""http://www.google.com/?q=mitä""",
             u"""<a href="http://www.google.com/?q=mit%C3%A4" rel="nofollow">http://www.google.com/?q=mit\xe4</a>""",
         ),
+        ( # Test mailto: links
+            """<a href="mailto:test@example.com">Mail Test</a>""",
+            """<a href="mailto:test@example.com" rel="nofollow" class="external">Mail Test</a>"""
+        ),
     )
 
     def setUp(self):
