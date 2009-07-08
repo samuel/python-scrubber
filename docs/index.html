@@ -1,0 +1,155 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Scrubber &mdash; Scrubber v1.4.2 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.4.2',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Scrubber v1.4.2 documentation" href="" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li><a href="">Scrubber v1.4.2 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="scrubber">
+<h1>Scrubber<a class="headerlink" href="#scrubber" title="Permalink to this headline">¶</a></h1>
+<p>Scrubber is a white-listing HTML sanitizer. It uses BeautifulSoup to parse an
+HTML document and removes any tags and attributes that are not specifically
+allowed. Some other features of scrubber include:</p>
+<ul class="simple">
+<li>normalizing of tags (<tt class="docutils literal"><span class="pre">&lt;b&gt;</span></tt> to <tt class="docutils literal"><span class="pre">&lt;strong&gt;</span></tt>, etc..)</li>
+<li>cleaning up markup to make it more consistent between browsers</li>
+<li>optional autolinking urls</li>
+<li>optional <tt class="docutils literal"><span class="pre">rel=&quot;nofollow&quot;</span></tt> for anchor tags</li>
+<li>optional removal of comments</li>
+</ul>
+<ul class="simple">
+</ul>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>Stable releases of Scrubber can be installed using <tt class="docutils literal"><span class="pre">easy_install</span></tt> or
+<tt class="docutils literal"><span class="pre">pip</span></tt>.</p>
+</div>
+<div class="section" id="source">
+<h2>Source<a class="headerlink" href="#source" title="Permalink to this headline">¶</a></h2>
+<p>You can find the latest version of scrubber at
+<a class="reference external" href="http://github.com/samuel/python-scrubber">http://github.com/samuel/python-scrubber</a></p>
+</div>
+<div class="section" id="example">
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scrubber</span> <span class="kn">import</span> <span class="n">Scrubber</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">scrubber</span> <span class="o">=</span> <span class="n">Scrubber</span><span class="p">(</span><span class="n">autolink</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">scrubber</span><span class="o">.</span><span class="n">scrub</span><span class="p">(</span><span class="s">&quot;&lt;script&gt;alert(&#39;foo&#39;);&lt;/script&gt;&lt;p&gt;bar, www.google.com&lt;/p&gt;&quot;</span><span class="p">)</span>
+<span class="go">u&#39;&lt;p&gt;bar, &lt;a href=&quot;http://www.google.com&quot; rel=&quot;nofollow&quot;&gt;www.google.com&lt;/a&gt;&lt;/p&gt;&#39;</span>
+<span class="go">&gt;&gt;&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="api">
+<h2>API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module">
+<h3>Module<a class="headerlink" href="#module" title="Permalink to this headline">¶</a></h3>
+<p>The scrubber module has the following functions.</p>
+<dl class="function">
+<dt id="scrubber.Scrubber">
+<tt class="descclassname">scrubber.</tt><tt class="descname">Scrubber</tt><big>(</big><em>base_url=None</em>, <em>autolink=True</em>, <em>nofollow=True</em>, <em>remove_comments=True</em><big>)</big><a class="headerlink" href="#scrubber.Scrubber" title="Permalink to this definition">¶</a></dt>
+<dd>Return a new Scrubber with the given settings. If <em>base_url</em> is given
+then all relative URLs are rewritten to be absolute.</dd></dl>
+
+</div>
+<div class="section" id="scrubber-objects">
+<h3>Scrubber Objects<a class="headerlink" href="#scrubber-objects" title="Permalink to this headline">¶</a></h3>
+<p>Scrubber objects have the following methods.</p>
+<dl class="method">
+<dt id="scrubber.scrub">
+<tt class="descclassname">scrubber.</tt><tt class="descname">scrub</tt><big>(</big><em>html</em><big>)</big><a class="headerlink" href="#scrubber.scrub" title="Permalink to this definition">¶</a></dt>
+<dd>Return a sanitized version of <em>html</em>.</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="">Scrubber</a><ul>
+<li><a class="reference external" href="#installation">Installation</a></li>
+<li><a class="reference external" href="#source">Source</a></li>
+<li><a class="reference external" href="#example">Example</a></li>
+<li><a class="reference external" href="#api">API</a><ul>
+<li><a class="reference external" href="#module">Module</a></li>
+<li><a class="reference external" href="#scrubber-objects">Scrubber Objects</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="_sources/index.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li><a href="">Scrubber v1.4.2 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2009, Samuel Stauffer.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.2.
+    </div>
+  </body>
+</html>
