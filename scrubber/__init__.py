@@ -7,7 +7,7 @@ See LICENSE for license details.
 """
 
 __author__ = "Samuel Stauffer <samuel@lefora.com>"
-__version__ = "1.4.2"
+__version__ = "1.4.3"
 __license__ = "Python"
 __all__ = ['Scrubber', 'SelectiveScriptScrubber', 'ScrubberWarning', 'UnapprovedJavascript', 'urlize']
 
@@ -83,11 +83,11 @@ class ScrubberWarning(object):
     pass
 
 class Scrubber(object):
-    def __init__(self, base_url=None):
-        self.autolink = bool(urlize)
-        self.nofollow = True
-        self.remove_comments = True
+    def __init__(self, base_url=None, autolink=True, nofollow=True, remove_comments=True):
         self.base_url = base_url
+        self.autolink = autolink and bool(urlize)
+        self.nofollow = nofollow
+        self.remove_comments = remove_comments
         self.allowed_tags = set((
             'a', 'abbr', 'acronym', 'b', 'bdo', 'big', 'blockquote', 'br',
             'center', 'cite', 'code',
