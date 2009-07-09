@@ -23,6 +23,12 @@ import sys, os
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = ['sphinx.ext.autodoc', 'sphinx.ext.todo']
+try:
+    from github.tools import sphinx
+except ImportError:
+    pass
+else:
+    extensions.append('github.tools.sphinx')
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
