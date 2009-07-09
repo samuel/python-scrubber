@@ -14,7 +14,9 @@ Status
 
 Scrubber is stable and usable in production.
 
-Documentation
-=============
+Links
+=====
 
-See ./docs/
+* `home page <http://samuel.github.com/python-scrubber/>`_
+* `documentation <http://samuel.github.com/python-scrubber/docs/>`_
+* `source <http://github.com/samuel/python-scrubber/>`_
