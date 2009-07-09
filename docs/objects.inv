@@ -1,5 +1,5 @@
 # Sphinx inventory version 1
 # Project: Scrubber
-# Version: 1.4.2
+# Version: 1.4.3
 scrubber.scrub method index.html
 scrubber.Scrubber function index.html
