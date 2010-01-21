@@ -7,8 +7,8 @@ See LICENSE for license details.
 """
 
 __author__ = "Samuel Stauffer <samuel@lefora.com>"
-__version__ = "1.4.3"
-__license__ = "Python"
+__version__ = "1.5.0"
+__license__ = "BSD"
 __all__ = ['Scrubber', 'SelectiveScriptScrubber', 'ScrubberWarning', 'UnapprovedJavascript', 'urlize']
 
 import re, string
@@ -107,7 +107,7 @@ class Scrubber(object):
             'face', 'size', # font tags
             'flashvars', # Not sure about flashvars - if any harm can come from it
             'classid', # FF needs the classid on object tags for flash
-            'name', 'value', 'quality', 'data', # for flash embed param tags, could limit to just param if this is harmful
+            'name', 'value', 'quality', 'data', 'scale', # for flash embed param tags, could limit to just param if this is harmful
         )) # Bad attributes: 'allowscriptaccess', 'xmlns', 'target'
         self.normalized_tag_replacements = {'b': 'strong', 'i': 'em'}
         self.warnings = []
