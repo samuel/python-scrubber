@@ -7,7 +7,7 @@ See LICENSE for license details.
 """
 
 __author__ = "Samuel Stauffer <samuel@lefora.com>"
-__version__ = "1.5.0"
+__version__ = "1.5.1"
 __license__ = "BSD"
 __all__ = ['Scrubber', 'SelectiveScriptScrubber', 'ScrubberWarning', 'UnapprovedJavascript', 'urlize']
 
@@ -108,6 +108,7 @@ class Scrubber(object):
             'flashvars', # Not sure about flashvars - if any harm can come from it
             'classid', # FF needs the classid on object tags for flash
             'name', 'value', 'quality', 'data', 'scale', # for flash embed param tags, could limit to just param if this is harmful
+            'salign', 'align', 'wmode',
         )) # Bad attributes: 'allowscriptaccess', 'xmlns', 'target'
         self.normalized_tag_replacements = {'b': 'strong', 'i': 'em'}
         self.warnings = []
