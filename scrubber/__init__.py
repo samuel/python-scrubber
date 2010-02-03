@@ -1,13 +1,13 @@
 """
 Whitelisting HTML sanitizer.
 
-Copyright (c) 2009 Lefora <samuel@lefora.com>
+Copyright (c) 2009-2010 Lefora <samuel@lefora.com>
 
 See LICENSE for license details.
 """
 
 __author__ = "Samuel Stauffer <samuel@lefora.com>"
-__version__ = "1.6.0"
+__version__ = "1.6.1"
 __license__ = "BSD"
 __all__ = ['Scrubber', 'SelectiveScriptScrubber', 'ScrubberWarning', 'UnapprovedJavascript', 'urlize']
 
@@ -278,14 +278,11 @@ class UnapprovedJavascript(ScrubberWarning):
         self.path = src[:src.rfind('/')]
 
 class SelectiveScriptScrubber(Scrubber):
+    allowed_tags = Scrubber.allowed_tags | set(('script', 'noscript', 'iframe'))
+    allowed_attributes = Scrubber.allowed_attributes | set(('scrolling', 'frameborder'))
+
     def __init__(self):
         super(SelectiveScriptScrubber, self).__init__()
-
-        self.allowed_tags.add('script')
-        self.allowed_tags.add('noscript')
-        self.allowed_tags.add('iframe')
-        self.allowed_attributes.add('scrolling')
-        self.allowed_attributes.add('frameborder')
 
         self.allowed_script_srcs = set((
             'http://www.statcounter.com/counter/counter_xhtml.js',

@@ -2,13 +2,26 @@
 
 from setuptools import setup
 
+# Get the version, but make sure to create a fake BeautifulSoup module just
+# in case it isn't installed.
+import imp
+import sys
+mod = imp.new_module("BeautifulSoup")
+mod.BeautifulSoup = None
+mod.Comment = None
+sys.modules["BeautifulSoup"] = mod
 from scrubber import __version__ as version
+
+try:
+    long_description = open("README.rst").read()
+except IOError:
+    long_description = ""
 
 setup(
     name = 'scrubber',
     version = version,
     description = 'A whitelisting HTML sanitizer',
-    long_description = open("README.rst").read(),
+    long_description = long_description,
     author = 'Samuel Stauffer',
     author_email = 'samuel@lefora.com',
     url = 'http://github.com/samuel/python-scrubber/tree/master',
