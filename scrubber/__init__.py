@@ -7,7 +7,7 @@ See LICENSE for license details.
 """
 
 __author__ = "Samuel Stauffer <samuel@lefora.com>"
-__version__ = "1.5.1"
+__version__ = "1.6.0"
 __license__ = "BSD"
 __all__ = ['Scrubber', 'SelectiveScriptScrubber', 'ScrubberWarning', 'UnapprovedJavascript', 'urlize']
 
