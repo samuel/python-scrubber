@@ -1,0 +1,30 @@
+Version 1.6.0 & 1.6.1 - Feb 3rd, 2010
+* Moved sets allowed_tags, allowed_attributes, etc.. to the class level.
+* Fixed a possible problem with removing nodes but saving content.
+* Fixed setup.py when BeautifulSoup isn't installed or installing from tgz.
+
+Version 1.5.0 & 1.5.1 - Jan 20, 2010
+* Added 'scale', 'salign', 'align', and 'wmode' to fix embed codes.
+
+Version 1.4.2 - May 11, 2009
+* Fixed mangling of mailto: links
+
+Version 1.4.1 - Apr 25, 2009
+* Added doc strings.
+* Added tests.py to MANIFEST.in
+
+Version 1.4.0 - Apr 24, 2009
+* Added BSD LICENSE and MANIFEST.in
+
+Version 1.3.5 - Apr 23, 2009
+* Unicode in autolinked urls is now properly escaped.
+
+Version 1.3.4 - Apr 22, 2009
+* Autolinking now properly splits on &nbsp;
+
+Version 1.3.3 - Mar 9, 2009
+* Layered tags to be removed are now handled appropriately.
+* Front scrubber no longer modifies the tree.
+
+Version 1.3.2 - Mar 5, 2009
+* \xa0 (NBSP) is now maintained but urlize can handle it

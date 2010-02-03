@@ -27,6 +27,7 @@ setup(
     url = 'http://github.com/samuel/python-scrubber/tree/master',
     install_requires = ["BeautifulSoup"],
     packages = ['scrubber'],
+    license = "BSD",
     classifiers = [
         'Intended Audience :: Developers',
         'License :: OSI Approved :: BSD License',
