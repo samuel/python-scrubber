@@ -83,12 +83,7 @@ class ScrubberWarning(object):
     pass
 
 class Scrubber(object):
-    def __init__(self, base_url=None, autolink=True, nofollow=True, remove_comments=True):
-        self.base_url = base_url
-        self.autolink = autolink and bool(urlize)
-        self.nofollow = nofollow
-        self.remove_comments = remove_comments
-        self.allowed_tags = set((
+    allowed_tags = set((
             'a', 'abbr', 'acronym', 'b', 'bdo', 'big', 'blockquote', 'br',
             'center', 'cite', 'code',
             'dd', 'del', 'dfn', 'div', 'dl', 'dt', 'em', 'embed', 'font',
@@ -98,10 +93,10 @@ class Scrubber(object):
             'table', 'tbody', 'td', 'th', 'thead', 'tr', 'tt', 'ul', 'u',
             'var', 'wbr',
         ))
-        self.disallowed_tags_save_content = set((
+    disallowed_tags_save_content = set((
             'blink', 'body', 'html',
         ))
-        self.allowed_attributes = set((
+    allowed_attributes = set((
             'align', 'alt', 'border', 'cite', 'class', 'dir',
             'height', 'href', 'src', 'style', 'title', 'type', 'width',
             'face', 'size', # font tags
@@ -110,7 +105,17 @@ class Scrubber(object):
             'name', 'value', 'quality', 'data', 'scale', # for flash embed param tags, could limit to just param if this is harmful
             'salign', 'align', 'wmode',
         )) # Bad attributes: 'allowscriptaccess', 'xmlns', 'target'
-        self.normalized_tag_replacements = {'b': 'strong', 'i': 'em'}
+    normalized_tag_replacements = {'b': 'strong', 'i': 'em'}
+
+    def __init__(self, base_url=None, autolink=True, nofollow=True, remove_comments=True):
+        self.base_url = base_url
+        self.autolink = autolink and bool(urlize)
+        self.nofollow = nofollow
+        self.remove_comments = remove_comments
+        self.allowed_tags = self.__class__.allowed_tags.copy()
+        self.disallowed_tags_save_content = self.__class__.disallowed_tags_save_content.copy()
+        self.allowed_attributes = self.__class__.allowed_attributes.copy()
+        self.normalized_tag_replacements = self.__class__.normalized_tag_replacements.copy()
         self.warnings = []
 
         # Find all _scrub_tab_<name> methods
