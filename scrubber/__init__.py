@@ -99,7 +99,7 @@ class Scrubber(object):
             'var', 'wbr',
         ))
         self.disallowed_tags_save_content = set((
-            'blink',
+            'blink', 'body', 'html',
         ))
         self.allowed_attributes = set((
             'align', 'alt', 'border', 'cite', 'class', 'dir',
@@ -182,7 +182,7 @@ class Scrubber(object):
         for keep_contentes, node in nodes:
             if keep_contentes and node.contents:
                 idx = node.parent.contents.index(node)
-                for n in reversed(node.contents):
+                for n in reversed(list(node.contents)): # Copy the contents list to avoid modifying while traversing
                     node.parent.insert(idx, n)
             node.extract()
 

@@ -58,7 +58,7 @@ class ScrubberTestCase(unittest.TestCase):
         ),
         ( # Test evil code
             """<img src=""http://www.a.com/a.jpg<script type=text/javascript src="http://1.2.3.4:81/xss.js">" /><<img src=""http://www.a.com/a.jpg</script>""",
-            "" if BeautifulSoup.__version__.startswith('3.1') else """<img src="" alt="" />"""
+            ""
         ),
         ( # Bad font tags
             """<font size=+0>test</font> <font>wowzers</font> <font></font> <font><p>foo</p><i>bar</i></font>""",
@@ -95,6 +95,10 @@ class ScrubberTestCase(unittest.TestCase):
         ( # Test mailto: links
             """<a href="mailto:test@example.com">Mail Test</a>""",
             """<a href="mailto:test@example.com" rel="nofollow" class="external">Mail Test</a>"""
+        ),
+        ( # Text removing a node but keeping the contents
+            """<html><head><title>Title</title></head><body><div><blink>Hello</blink> World!</blink></div></body></html>""",
+            """<div>Hello World!</div>"""
         ),
     )
 
