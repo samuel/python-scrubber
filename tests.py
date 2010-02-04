@@ -96,9 +96,13 @@ class ScrubberTestCase(unittest.TestCase):
             """<a href="mailto:test@example.com">Mail Test</a>""",
             """<a href="mailto:test@example.com" rel="nofollow" class="external">Mail Test</a>"""
         ),
-        ( # Text removing a node but keeping the contents
+        ( # Test removing a node but keeping the contents
             """<html><head><title>Title</title></head><body><div><blink>Hello</blink> World!</blink></div></body></html>""",
             """<div>Hello World!</div>"""
+        ),
+        ( # Make keeping content for incomplete tags works
+            "<blink><br><br>",
+            "<br /><br />"
         ),
     )
 
