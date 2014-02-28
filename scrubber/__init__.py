@@ -111,6 +111,7 @@ class Scrubber(object):
         self.base_url = base_url
         self.autolink = autolink and bool(urlize)
         self.nofollow = nofollow
+        self.ignore_empty_attr = ignore_empty_attr
         self.remove_comments = remove_comments
         self.allowed_tags = self.__class__.allowed_tags.copy()
         self.disallowed_tags_save_content = self.__class__.disallowed_tags_save_content.copy()
