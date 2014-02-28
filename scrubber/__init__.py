@@ -107,10 +107,11 @@ class Scrubber(object):
         )) # Bad attributes: 'allowscriptaccess', 'xmlns', 'target'
     normalized_tag_replacements = {'b': 'strong', 'i': 'em'}
 
-    def __init__(self, base_url=None, autolink=True, nofollow=True, remove_comments=True):
+    def __init__(self, base_url=None, autolink=True, nofollow=True, remove_comments=True, ignore_empty_attr=True):
         self.base_url = base_url
         self.autolink = autolink and bool(urlize)
         self.nofollow = nofollow
+        self.ignore_empty_attr = ignore_empty_attr
         self.remove_comments = remove_comments
         self.allowed_tags = self.__class__.allowed_tags.copy()
         self.disallowed_tags_save_content = self.__class__.disallowed_tags_save_content.copy()
@@ -159,7 +160,7 @@ class Scrubber(object):
             # Remove disallowed attributes
             attrs = []
             for k, v in node.attrs:
-                if not v:
+                if not v and self.ignore_empty_attr:
                     continue
 
                 if k.lower() not in self.allowed_attributes:
